@@ -219,3 +219,73 @@ describe("game.playCard", () => {
     await expect(caller.game.playCard({ id: "g1", cardId: "not-in-hand" })).rejects.toThrow();
   });
 });
+
+describe("game.recruitHero", () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("recruits hero from HQ and moves to discard", async () => {
+    const initialState = createInitialState();
+    const serialized = JSON.parse(JSON.stringify(initialState));
+    serialized.phase = "MAIN";
+    serialized.player.recruitPoints = 10;
+    // hq[0] is an Iron Man card from initial setup — use its id
+    const hqCardId = serialized.hq[0].id;
+
+    vi.mocked(prisma.game.findUnique).mockResolvedValue({
+      id: "g1",
+      state: serialized,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+    vi.mocked(prisma.game.update).mockResolvedValue({
+      id: "g1",
+      state: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+
+    const caller = createCaller({});
+    const result = await caller.game.recruitHero({ id: "g1", hqSlot: 0 });
+
+    const state = result.state as { hq: (unknown | null)[]; player: { discard: { id: string }[]; recruitPoints: number } };
+    expect(state.player.discard.some((c) => c.id === hqCardId)).toBe(true);
+    expect(state.hq[0]?.valueOf()).not.toBe(hqCardId);
+  });
+});
+
+describe("game.fightVillain", () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("removes villain from city and adds to victory", async () => {
+    const initialState = createInitialState();
+    const serialized = JSON.parse(JSON.stringify(initialState));
+    serialized.phase = "MAIN";
+    serialized.player.attackPoints = 10;
+    serialized.city = [{ id: "hydra-soldier", name: "HYDRA Soldier", attackValue: 3, vpValue: 1 }, null, null, null, null];
+
+    vi.mocked(prisma.game.findUnique).mockResolvedValue({
+      id: "g1",
+      state: serialized,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+    vi.mocked(prisma.game.update).mockResolvedValue({
+      id: "g1",
+      state: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+
+    const caller = createCaller({});
+    const result = await caller.game.fightVillain({ id: "g1", cityIndex: 0 });
+
+    const state = result.state as { city: (unknown | null)[]; player: { victory: unknown[]; attackPoints: number } };
+    expect(state.city[0]).toBeNull();
+    expect(state.player.victory).toHaveLength(1);
+    expect(state.player.attackPoints).toBe(7);
+  });
+});

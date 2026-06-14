@@ -14,6 +14,7 @@ abstract class IronManHeroCard extends HeroCard {
 }
 
 export class IronManBlazingRepulsor extends IronManHeroCard {
+  readonly cost = 4;
   constructor() { super("im-blazing-repulsor", "Iron Man: Blazing Repulsor"); }
   onPlay(state: GameState): GameState {
     return { ...state, player: { ...state.player, attackPoints: state.player.attackPoints + 4 } };
@@ -21,6 +22,7 @@ export class IronManBlazingRepulsor extends IronManHeroCard {
 }
 
 export class IronManInvincibleArmor extends IronManHeroCard {
+  readonly cost = 6;
   constructor() { super("im-invincible-armor", "Iron Man: Invincible Armor"); }
   onPlay(state: GameState): GameState {
     const bonus = hasTeamBonus(state) ? 2 : 0;
@@ -36,6 +38,7 @@ export class IronManInvincibleArmor extends IronManHeroCard {
 }
 
 export class IronManExothermicBlast extends IronManHeroCard {
+  readonly cost = 5;
   constructor() { super("im-exothermic-blast", "Iron Man: Exothermic Blast"); }
   onPlay(state: GameState): GameState {
     return { ...state, player: { ...state.player, attackPoints: state.player.attackPoints + 5 } };
@@ -43,6 +46,7 @@ export class IronManExothermicBlast extends IronManHeroCard {
 }
 
 export class IronManThinkSmarter extends IronManHeroCard {
+  readonly cost = 4;
   constructor() { super("im-think-smarter", "Iron Man: Think Smarter"); }
   onPlay(state: GameState): GameState {
     return { ...state, player: { ...state.player, recruitPoints: state.player.recruitPoints + 3 } };
@@ -50,6 +54,7 @@ export class IronManThinkSmarter extends IronManHeroCard {
 }
 
 export class IronManThinkingCap extends IronManHeroCard {
+  readonly cost = 6;
   constructor() { super("im-thinking-cap", "Iron Man: Thinking Cap"); }
   onPlay(state: GameState): GameState {
     const bonus = hasTeamBonus(state) ? 2 : 0;

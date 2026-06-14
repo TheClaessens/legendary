@@ -8,5 +8,5 @@ export { WolverineAdamantiumClaws, WolverineAdamantiumSkeleton, WolverineHealing
 export { ShieldAgent, ShieldTrooper } from "./heroes/shield.js";
 export { createInitialState } from "./game-init.js";
 export { flipVillainDeck } from "./game-logic.js";
-export { playCard } from "./game-actions.js";
+export { playCard, recruitHero, fightVillain, fightMastermind } from "./game-actions.js";
 export { hydrateState } from "./state-hydration.js";

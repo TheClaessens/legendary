@@ -2,6 +2,7 @@ import { HeroCard } from "../base.js";
 import type { GameState } from "../base.js";
 
 export class ShieldAgent extends HeroCard {
+  readonly cost = 0;
   constructor(id: string) {
     super(id, "S.H.I.E.L.D. Agent");
   }
@@ -11,6 +12,7 @@ export class ShieldAgent extends HeroCard {
 }
 
 export class ShieldTrooper extends HeroCard {
+  readonly cost = 0;
   constructor(id: string) {
     super(id, "S.H.I.E.L.D. Trooper");
   }
