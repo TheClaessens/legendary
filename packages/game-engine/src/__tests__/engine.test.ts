@@ -54,6 +54,7 @@ function makeState(overrides?: Partial<GameState>): GameState {
     hq: [null, null, null, null, null],
     villainDeck: [],
     koPile: [],
+    schemeTwistCount: 0,
     player: {
       deck: [],
       hand: [],
