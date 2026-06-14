@@ -163,3 +163,59 @@ describe("game.flipVillainDeck", () => {
     expect((result.state as { status: string }).status).toBe("LOST");
   });
 });
+
+describe("game.playCard", () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("throws NOT_FOUND when game does not exist", async () => {
+    vi.mocked(prisma.game.findUnique).mockResolvedValue(null);
+
+    const caller = createCaller({});
+    await expect(caller.game.playCard({ id: "missing", cardId: "x" })).rejects.toThrow();
+  });
+
+  it("plays a card and updates recruitPoints", async () => {
+    const initialState = createInitialState();
+    const serialized = JSON.parse(JSON.stringify(initialState));
+    serialized.phase = "MAIN";
+    serialized.player.hand = [{ id: "agent-0", name: "S.H.I.E.L.D. Agent" }];
+
+    vi.mocked(prisma.game.findUnique).mockResolvedValue({
+      id: "g1",
+      state: serialized,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+    vi.mocked(prisma.game.update).mockResolvedValue({
+      id: "g1",
+      state: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+
+    const caller = createCaller({});
+    const result = await caller.game.playCard({ id: "g1", cardId: "agent-0" });
+
+    expect((result.state as { player: { recruitPoints: number } }).player.recruitPoints).toBe(1);
+    expect((result.state as { player: { hand: unknown[] } }).player.hand).toHaveLength(0);
+  });
+
+  it("throws BAD_REQUEST when card not in hand", async () => {
+    const initialState = createInitialState();
+    const serialized = JSON.parse(JSON.stringify(initialState));
+    serialized.phase = "MAIN";
+    serialized.player.hand = [];
+
+    vi.mocked(prisma.game.findUnique).mockResolvedValue({
+      id: "g1",
+      state: serialized,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+
+    const caller = createCaller({});
+    await expect(caller.game.playCard({ id: "g1", cardId: "not-in-hand" })).rejects.toThrow();
+  });
+});

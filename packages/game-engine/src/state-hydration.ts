@@ -114,8 +114,8 @@ export function hydrateState(plain: Record<string, unknown>): GameState {
     koPile: (plain.koPile as PlainCard[]).map((c) => ({ id: c.id, name: c.name })),
     schemeTwistCount: plain.schemeTwistCount as number,
     player: {
-      deck: player.deck.map((c) => ({ id: c.id, name: c.name })),
-      hand: player.hand.map((c) => ({ id: c.id, name: c.name })),
+      deck: player.deck.map(hydrateHeroCard),
+      hand: player.hand.map(hydrateHeroCard),
       discard: player.discard.map((c) => ({ id: c.id, name: c.name })),
       victory: player.victory.map((c) => ({ id: c.id, name: c.name })),
       playedThisTurn: player.playedThisTurn.map(hydrateHeroCard),
