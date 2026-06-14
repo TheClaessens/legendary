@@ -1,5 +1,12 @@
 import { type GameState, Villain, Bystander } from "./base.js";
 
+export function applyStatusChecks(state: GameState): GameState {
+  if (state.status !== "IN_PROGRESS") return state;
+  if (state.scheme.checkLoseCondition(state)) return { ...state, status: "LOST" };
+  if (state.scheme.checkWinCondition(state)) return { ...state, status: "WON" };
+  return state;
+}
+
 export function flipVillainDeck(state: GameState): GameState {
   if (state.villainDeck.length === 0) return state;
 
