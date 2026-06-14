@@ -15,6 +15,7 @@ export type GameState = {
   hq: (HeroCard | null)[];
   villainDeck: Card[];
   koPile: Card[];
+  schemeTwistCount: number;
   player: {
     deck: Card[];
     hand: Card[];
@@ -72,8 +73,11 @@ export abstract class Scheme {
   onVillainEscape(state: GameState): GameState {
     return state;
   }
-  checkWinCondition(_state: GameState): boolean {
-    return false;
+  checkWinCondition(state: GameState): boolean {
+    const tacticIds = new Set(state.mastermind.tactics.map((t) => t.id));
+    if (tacticIds.size === 0) return false;
+    const victoryIds = new Set(state.player.victory.map((c) => c.id));
+    return [...tacticIds].every((id) => victoryIds.has(id));
   }
   checkLoseCondition(_state: GameState): boolean {
     return false;
