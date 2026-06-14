@@ -1,5 +1,18 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+
+vi.mock("../trpc.js", () => ({
+  trpc: {
+    game: {
+      create: { useMutation: vi.fn(() => ({ mutate: vi.fn(), isPending: false, isError: false })) },
+      playCard: { useMutation: vi.fn(() => ({ mutate: vi.fn() })) },
+      recruitHero: { useMutation: vi.fn(() => ({ mutate: vi.fn() })) },
+      fightVillain: { useMutation: vi.fn(() => ({ mutate: vi.fn() })) },
+      fightMastermind: { useMutation: vi.fn(() => ({ mutate: vi.fn() })) },
+    },
+  },
+}));
+
 import Board from "../Board.js";
 import type { LiveGameState } from "../types.js";
 
