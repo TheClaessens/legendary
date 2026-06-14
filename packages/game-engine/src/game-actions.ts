@@ -1,4 +1,13 @@
-import { type GameState, HeroCard, Villain } from "./base.js";
+import { type GameState, HeroCard, Villain, type Card } from "./base.js";
+
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 export function playCard(state: GameState, cardId: string): GameState {
   if (state.phase !== "MAIN") {
@@ -124,4 +133,46 @@ export function fightMastermind(state: GameState): GameState {
   }
 
   return s;
+}
+
+export function endTurn(state: GameState): GameState {
+  if (state.phase !== "MAIN") {
+    throw new Error(`Cannot end turn during ${state.phase} phase`);
+  }
+
+  const discarded = [...state.player.hand, ...state.player.playedThisTurn] as Card[];
+  let deck = state.player.deck;
+
+  if (deck.length < 6) {
+    deck = shuffleArray([...deck, ...state.player.discard, ...discarded]);
+    const drawn = deck.slice(0, 6);
+    return {
+      ...state,
+      phase: "VILLAIN_DECK_FLIP",
+      player: {
+        ...state.player,
+        hand: drawn,
+        deck: deck.slice(6),
+        discard: [],
+        playedThisTurn: [],
+        recruitPoints: 0,
+        attackPoints: 0,
+      },
+    };
+  }
+
+  const drawn = deck.slice(0, 6);
+  return {
+    ...state,
+    phase: "VILLAIN_DECK_FLIP",
+    player: {
+      ...state.player,
+      hand: drawn,
+      deck: deck.slice(6),
+      discard: [...state.player.discard, ...discarded],
+      playedThisTurn: [],
+      recruitPoints: 0,
+      attackPoints: 0,
+    },
+  };
 }

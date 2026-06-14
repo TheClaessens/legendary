@@ -289,3 +289,54 @@ describe("game.fightVillain", () => {
     expect(state.player.attackPoints).toBe(7);
   });
 });
+
+describe("game.endTurn", () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("transitions to VILLAIN_DECK_FLIP and draws 6 cards", async () => {
+    const initialState = createInitialState();
+    const serialized = JSON.parse(JSON.stringify(initialState));
+    serialized.phase = "MAIN";
+    serialized.player.hand = [];
+    serialized.player.deck = Array.from({ length: 10 }, (_: unknown, i: number) => ({ id: `agent-${i}`, name: "S.H.I.E.L.D. Agent" }));
+
+    vi.mocked(prisma.game.findUnique).mockResolvedValue({
+      id: "g1",
+      state: serialized,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+    vi.mocked(prisma.game.update).mockResolvedValue({
+      id: "g1",
+      state: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+
+    const caller = createCaller({});
+    const result = await caller.game.endTurn({ id: "g1" });
+
+    const state = result.state as { phase: string; player: { hand: unknown[] } };
+    expect(state.phase).toBe("VILLAIN_DECK_FLIP");
+    expect(state.player.hand).toHaveLength(6);
+  });
+
+  it("rejects mutation when game is already over", async () => {
+    const initialState = createInitialState();
+    const serialized = JSON.parse(JSON.stringify(initialState));
+    serialized.phase = "MAIN";
+    serialized.status = "LOST";
+
+    vi.mocked(prisma.game.findUnique).mockResolvedValue({
+      id: "g1",
+      state: serialized,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+
+    const caller = createCaller({});
+    await expect(caller.game.endTurn({ id: "g1" })).rejects.toThrow();
+  });
+});

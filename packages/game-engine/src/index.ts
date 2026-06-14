@@ -7,6 +7,6 @@ export { SpiderManAgileDefense, SpiderManWebSwing, SpiderManAmazingFantasy, Spid
 export { WolverineAdamantiumClaws, WolverineAdamantiumSkeleton, WolverineHealingFactor, WolverineUndying, WolverineBerserkerRage } from "./heroes/wolverine.js";
 export { ShieldAgent, ShieldTrooper } from "./heroes/shield.js";
 export { createInitialState } from "./game-init.js";
-export { flipVillainDeck } from "./game-logic.js";
-export { playCard, recruitHero, fightVillain, fightMastermind } from "./game-actions.js";
+export { flipVillainDeck, applyStatusChecks } from "./game-logic.js";
+export { playCard, recruitHero, fightVillain, fightMastermind, endTurn } from "./game-actions.js";
 export { hydrateState } from "./state-hydration.js";
