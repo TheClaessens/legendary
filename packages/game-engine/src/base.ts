@@ -21,6 +21,7 @@ export type GameState = {
     hand: Card[];
     discard: Card[];
     victory: Card[];
+    playedThisTurn: HeroCard[];
     recruitPoints: number;
     attackPoints: number;
   };

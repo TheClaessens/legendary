@@ -58,6 +58,7 @@ function makeState(overrides?: Partial<GameState>): GameState {
       hand: [],
       discard: [],
       victory: [],
+      playedThisTurn: [],
       recruitPoints: 3,
       attackPoints: 5,
     },
