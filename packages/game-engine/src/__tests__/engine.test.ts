@@ -21,6 +21,7 @@ class TestTactic extends Tactic {
 }
 
 class TestHeroCard extends HeroCard {
+  readonly cost = 0;
   onPlay(state: GameState): GameState {
     return state;
   }

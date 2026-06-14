@@ -33,6 +33,7 @@ class NoopTactic extends Tactic {
 }
 
 class NoopHero extends HeroCard {
+  readonly cost = 0;
   onPlay(state: GameState): GameState {
     return state;
   }

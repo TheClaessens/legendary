@@ -31,6 +31,7 @@ export type GameState = {
 };
 
 export abstract class HeroCard {
+  abstract readonly cost: number;
   constructor(
     public readonly id: string,
     public readonly name: string,
@@ -63,6 +64,7 @@ export class Mastermind {
     public readonly id: string,
     public readonly name: string,
     public readonly tactics: Tactic[],
+    public readonly attackValue: number = 10,
   ) {}
   onMasterStrike(state: GameState): GameState {
     return state;

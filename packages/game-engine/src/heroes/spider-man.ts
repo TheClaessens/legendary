@@ -10,6 +10,7 @@ function hasTeamBonus(state: GameState): boolean {
 }
 
 export class SpiderManAgileDefense extends SpiderManHeroCard {
+  readonly cost = 3;
   constructor() { super("sm-agile-defense", "Spider-Man: Agile Defense"); }
   onPlay(state: GameState): GameState {
     return {
@@ -24,6 +25,7 @@ export class SpiderManAgileDefense extends SpiderManHeroCard {
 }
 
 export class SpiderManWebSwing extends SpiderManHeroCard {
+  readonly cost = 4;
   constructor() { super("sm-web-swing", "Spider-Man: Web Swing"); }
   onPlay(state: GameState): GameState {
     const bonus = hasTeamBonus(state) ? 3 : 0;
@@ -39,6 +41,7 @@ export class SpiderManWebSwing extends SpiderManHeroCard {
 }
 
 export class SpiderManAmazingFantasy extends SpiderManHeroCard {
+  readonly cost = 4;
   constructor() { super("sm-amazing-fantasy", "Spider-Man: Amazing Fantasy"); }
   onPlay(state: GameState): GameState {
     return { ...state, player: { ...state.player, recruitPoints: state.player.recruitPoints + 4 } };
@@ -46,6 +49,7 @@ export class SpiderManAmazingFantasy extends SpiderManHeroCard {
 }
 
 export class SpiderManWallCrawling extends SpiderManHeroCard {
+  readonly cost = 3;
   constructor() { super("sm-wall-crawling", "Spider-Man: Wall Crawling"); }
   onPlay(state: GameState): GameState {
     return { ...state, player: { ...state.player, attackPoints: state.player.attackPoints + 3 } };
@@ -53,6 +57,7 @@ export class SpiderManWallCrawling extends SpiderManHeroCard {
 }
 
 export class SpiderManSpiderSense extends SpiderManHeroCard {
+  readonly cost = 4;
   constructor() { super("sm-spider-sense", "Spider-Man: Spider-Sense"); }
   onPlay(state: GameState): GameState {
     const bonus = hasTeamBonus(state) ? 2 : 0;

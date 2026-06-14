@@ -10,6 +10,7 @@ function hasTeamBonus(state: GameState): boolean {
 }
 
 export class WolverineAdamantiumClaws extends WolverineHeroCard {
+  readonly cost = 6;
   constructor() { super("wol-adamantium-claws", "Wolverine: Adamantium Claws"); }
   onPlay(state: GameState): GameState {
     return { ...state, player: { ...state.player, attackPoints: state.player.attackPoints + 5 } };
@@ -17,6 +18,7 @@ export class WolverineAdamantiumClaws extends WolverineHeroCard {
 }
 
 export class WolverineAdamantiumSkeleton extends WolverineHeroCard {
+  readonly cost = 5;
   constructor() { super("wol-adamantium-skeleton", "Wolverine: Adamantium Skeleton"); }
   onPlay(state: GameState): GameState {
     const bonus = hasTeamBonus(state) ? 2 : 0;
@@ -25,6 +27,7 @@ export class WolverineAdamantiumSkeleton extends WolverineHeroCard {
 }
 
 export class WolverineHealingFactor extends WolverineHeroCard {
+  readonly cost = 4;
   constructor() { super("wol-healing-factor", "Wolverine: Healing Factor"); }
   onPlay(state: GameState): GameState {
     let hand = state.player.hand;
@@ -47,6 +50,7 @@ export class WolverineHealingFactor extends WolverineHeroCard {
 }
 
 export class WolverineUndying extends WolverineHeroCard {
+  readonly cost = 3;
   constructor() { super("wol-undying", "Wolverine: Undying"); }
   onPlay(state: GameState): GameState {
     return { ...state, player: { ...state.player, attackPoints: state.player.attackPoints + 3 } };
@@ -54,6 +58,7 @@ export class WolverineUndying extends WolverineHeroCard {
 }
 
 export class WolverineBerserkerRage extends WolverineHeroCard {
+  readonly cost = 5;
   constructor() { super("wol-berserker-rage", "Wolverine: Berserker Rage"); }
   onPlay(state: GameState): GameState {
     return {
