@@ -3,3 +3,4 @@ export { RedSkull, TacticCosmicCubePower, TacticHydraTroops, TacticMasterStrike,
 export { BaronStrucker, HydraSoldier, HydraAssassin, MadameHydra } from "./villains/hydra.js";
 export { CosmicCubeScheme } from "./schemes/cosmic-cube.js";
 export { IronManBlazingRepulsor, IronManInvincibleArmor, IronManExothermicBlast, IronManThinkSmarter, IronManThinkingCap } from "./heroes/iron-man.js";
+export { SpiderManAgileDefense, SpiderManWebSwing, SpiderManAmazingFantasy, SpiderManWallCrawling, SpiderManSpiderSense } from "./heroes/spider-man.js";
