@@ -16,6 +16,7 @@ function makeState(overrides?: Partial<GameState>): GameState {
   const mastermind = new Mastermind("mm1", "Red Skull", [tactic1, tactic2]);
   return {
     phase: "VILLAIN_DECK_FLIP",
+    status: "IN_PROGRESS",
     scheme,
     mastermind,
     city: [null, null, null, null, null],

@@ -5,8 +5,11 @@ export interface Card {
 
 export type TurnPhase = "VILLAIN_DECK_FLIP" | "MAIN" | "DRAW";
 
+export type GameStatus = "IN_PROGRESS" | "WON" | "LOST";
+
 export type GameState = {
   phase: TurnPhase;
+  status: GameStatus;
   scheme: Scheme;
   mastermind: Mastermind;
   city: (Villain | null)[];
@@ -61,6 +64,9 @@ export class Mastermind {
     public readonly name: string,
     public readonly tactics: Tactic[],
   ) {}
+  onMasterStrike(state: GameState): GameState {
+    return state;
+  }
 }
 
 export abstract class Scheme {

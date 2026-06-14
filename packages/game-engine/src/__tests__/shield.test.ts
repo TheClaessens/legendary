@@ -11,6 +11,7 @@ class NoopScheme extends Scheme {}
 function makeState(): GameState {
   return {
     phase: "VILLAIN_DECK_FLIP",
+    status: "IN_PROGRESS",
     scheme: new NoopScheme("s1", "Scheme"),
     mastermind: new Mastermind("mm1", "MM", [new NoopTactic("t1", "T1")]),
     city: [null, null, null, null, null],

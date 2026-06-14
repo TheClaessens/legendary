@@ -5,12 +5,14 @@ vi.mock("@legendary/db", () => ({
     game: {
       findUnique: vi.fn(),
       create: vi.fn(),
+      update: vi.fn(),
     },
   },
 }));
 
 import { appRouter } from "../router.js";
 import { prisma } from "@legendary/db";
+import { createInitialState } from "@legendary/game-engine";
 
 const createCaller = appRouter.createCaller;
 
@@ -95,5 +97,69 @@ describe("game.create", () => {
     const result = await caller.game.create();
 
     expect((result.state as { phase: string }).phase).toBe("VILLAIN_DECK_FLIP");
+  });
+});
+
+describe("game.flipVillainDeck", () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("throws NOT_FOUND when game does not exist", async () => {
+    vi.mocked(prisma.game.findUnique).mockResolvedValue(null);
+
+    const caller = createCaller({});
+    await expect(caller.game.flipVillainDeck({ id: "missing" })).rejects.toThrow();
+  });
+
+  it("transitions phase to MAIN and persists updated state", async () => {
+    const initialState = createInitialState();
+    const serializedInitial = JSON.parse(JSON.stringify(initialState));
+    vi.mocked(prisma.game.findUnique).mockResolvedValue({
+      id: "game-1",
+      state: serializedInitial,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+    vi.mocked(prisma.game.update).mockResolvedValue({
+      id: "game-1",
+      state: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+
+    const caller = createCaller({});
+    const result = await caller.game.flipVillainDeck({ id: "game-1" });
+
+    expect(prisma.game.update).toHaveBeenCalledOnce();
+    const updateArg = vi.mocked(prisma.game.update).mock.calls[0][0];
+    expect((updateArg.data.state as { phase: string }).phase).toBe("MAIN");
+    expect(result.id).toBe("game-1");
+    expect((result.state as { phase: string }).phase).toBe("MAIN");
+  });
+
+  it("returns LOST status when scheme lose condition is met after flip", async () => {
+    const initialState = createInitialState();
+    const serializedInitial = JSON.parse(JSON.stringify(initialState));
+    serializedInitial.schemeTwistCount = 4;
+    serializedInitial.villainDeck = [{ id: "st-0", name: "Scheme Twist" }];
+
+    vi.mocked(prisma.game.findUnique).mockResolvedValue({
+      id: "game-2",
+      state: serializedInitial,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+    vi.mocked(prisma.game.update).mockResolvedValue({
+      id: "game-2",
+      state: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+
+    const caller = createCaller({});
+    const result = await caller.game.flipVillainDeck({ id: "game-2" });
+
+    expect((result.state as { status: string }).status).toBe("LOST");
   });
 });
