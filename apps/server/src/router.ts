@@ -1,6 +1,7 @@
 import { initTRPC } from "@trpc/server";
 import { z } from "zod";
 import { prisma } from "@legendary/db";
+import { createInitialState } from "@legendary/game-engine";
 
 const t = initTRPC.create();
 
@@ -15,6 +16,13 @@ export const appRouter = router({
       .query(({ input }) =>
         prisma.game.findUnique({ where: { id: input.id } })
       ),
+    create: publicProcedure.mutation(async () => {
+      const state = createInitialState();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const serialized = JSON.parse(JSON.stringify(state));
+      const game = await prisma.game.create({ data: { state: serialized } });
+      return { id: game.id, state: serialized };
+    }),
   }),
 });
 

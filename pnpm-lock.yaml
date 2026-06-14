@@ -20,6 +20,9 @@ importers:
       '@legendary/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@legendary/game-engine':
+        specifier: workspace:*
+        version: link:../../packages/game-engine
       '@trpc/server':
         specifier: ^11.4.3
         version: 11.17.0(typescript@5.9.3)
