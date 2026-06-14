@@ -4,15 +4,17 @@ import { trpc } from "./trpc.js";
 import type { LiveGameState } from "./types.js";
 
 export default function App() {
+  const [gameId, setGameId] = useState<string | null>(null);
   const [gameState, setGameState] = useState<LiveGameState | null>(null);
 
   const createGame = trpc.game.create.useMutation({
     onSuccess: (data) => {
+      setGameId(data.id);
       setGameState(data.state as LiveGameState);
     },
   });
 
-  if (!gameState) {
+  if (!gameState || !gameId) {
     return (
       <main className="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center gap-6">
         <h1 className="text-5xl font-bold tracking-widest uppercase">Legendary</h1>
@@ -31,5 +33,11 @@ export default function App() {
     );
   }
 
-  return <Board gameState={gameState} />;
+  return (
+    <Board
+      gameId={gameId}
+      gameState={gameState}
+      onStateChange={setGameState}
+    />
+  );
 }
